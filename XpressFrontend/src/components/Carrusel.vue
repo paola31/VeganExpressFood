@@ -6,7 +6,7 @@
             </div>
 
             <div class="carousel-item active" data-bs-interval="4000">
-                <img src="@/assets/mush.jpg" class="d-block w-100" alt="corn">
+                <img src="@/assets/potato.jpg" class="d-block w-100" alt="potato">
             </div>
 
             <div class="carousel-item" data-bs-interval="4000">
@@ -43,7 +43,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%; /* Asegura que la imagen ocupe todo el ancho */
+    width: 100%;
     height: 100%; /* Asegura que la imagen ocupe toda la altura */
 }
 
