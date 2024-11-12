@@ -15,14 +15,16 @@ export default {
     methods: {
         async adminLogin() {
             try {
-                const response = await this.$apiClient.post('/adminLogin', this.form)
+                const response = await this.$apiClient.adminLogin(this.form)
+                console.log(response)
                 if(response.status === 200){
                     this.errorMessage = ''
-                    this.$router.push('/admin/dashboard')
+                    this.$router.push('/admin/menus')
                 } else {
                     console.log(response)
                 }
             } catch (error) {
+                console.log(error)
                 this.errorMessage = error.response ? error.response.data.message : 'Error al iniciar sesión'
             }
         }

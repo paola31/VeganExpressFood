@@ -96,6 +96,10 @@ const userLogin = async (formValues) => {
     return await apiClient.post('/login', formValues);
 }
 
+const adminLogin = async (formValues) => {
+    return await apiClient.post('/adminLogin', formValues);
+}
+
 export default {
     apiClient,
     getMenuStates,
@@ -111,6 +115,7 @@ export default {
     deleteMenuItem,
     updateMenuItem,
     register,
-    userLogin
+    userLogin,
+    adminLogin
 
 }

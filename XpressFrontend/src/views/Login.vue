@@ -16,6 +16,7 @@ export default {
         async loginUser() {
             try {
                 const response = await this.$apiClient.userLogin(this.form)
+                console.log(response)
                 if(response.status === 200){
                     this.errorMessage = ''
                     this.$router.push('/user/orders')

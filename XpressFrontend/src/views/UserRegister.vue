@@ -26,7 +26,7 @@ export default {
 
                 if(response.status === 201){
                     this.errorMessage = ''
-                    this.$router.push('/user/dashboard')
+                    this.$router.push('/user/orders')
                 } else {
                     console.log(response)
                 }

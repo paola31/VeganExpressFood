@@ -67,8 +67,6 @@ export default {
         async updateItem(item) {
             try {
                 await this.$apiClient.updateMenuItem(item);
-                const updatedItems = await this.getMenuItems();
-                this.tableProps.data = [...updatedItems];
                 this.showNotification("Item del menu agregado con éxito", false);
             } catch (error) {
                 this.showNotification(error.response ? error.response.data.message : 'Error al agregar al item', true);

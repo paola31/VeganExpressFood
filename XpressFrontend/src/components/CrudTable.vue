@@ -30,7 +30,7 @@ export default {
             <tbody>
                 <tr v-for="item in tableProps.data" :key="item.id">
                     <td scope="row" v-for="(value, key) in item">
-                        <img v-if="key === 'image' " :src="`http://localhost:3000/images/${value}`" :alt="value" class="img-fluid rounded" width="35px" height="35px" />
+                        <img v-if="key === 'image' " :src="`http://localhost:3000/images/${value}`" :alt="value" class="img-fluid rounded" width="25px" height="25px" />
                         <span v-if="key !== 'image'"> {{ value }} </span>
                     </td>
                     <td scope="row" class="d-flex justify-content-center">
