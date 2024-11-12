@@ -1,10 +1,9 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
 import Carrusel from "@/components/Carrusel.vue";
 </script>
 
 <template>
-  <main>
+  <div class="container-fluid mt-5">
     <Carrusel />
-  </main>
+  </div>
 </template>

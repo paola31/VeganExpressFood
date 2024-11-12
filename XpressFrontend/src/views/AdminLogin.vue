@@ -31,7 +31,7 @@ export default {
 </script>
 
 <template>
-    <div class="container">
+    <div class="container d-flex flex-column align-items-center justify-content-center vh-100">
         <span class="title slogan">Inicio Administradores</span>
         <form @submit.prevent="adminLogin">
             <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
@@ -52,96 +52,4 @@ export default {
 
 <style scoped>
 
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    min-height: 100vh;
-    color: #a6a6a6;
-    text-align: center;
-    padding: 20px;
-    margin-top: -250px;
-}
-
-.title {
-    font-size: 1.6rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    font-family: "Open Sans Light";
-    letter-spacing: 2px;
-}
-
-.container form {
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 10px 18px rgb(45, 56, 53);
-    width: 150%;
-    max-width: 400px;
-}
-
-.container form label {
-    font-size: 1.1rem;
-    color: #e0e0e0;
-    text-align: left;
-}
-
-.container form .custom-input {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #00796b;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    font-size: 1rem;
-    color: #333;
-    transition: border-color 0.3s;
-}
-
-.container form .custom-input:focus {
-    border-color: #004d40;
-    outline: none;
-}
-
-.container form .custom-button {
-    padding: 12px 20px;
-    width: 100%;
-    font-size: 1.1rem;
-    color: white;
-    background-color: #00796b;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.container form .custom-button:hover {
-    background-color: #004d40;
-}
-
-.alert {
-    margin-bottom: 15px;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: rgba(255, 0, 0, 0.1);
-    color: red;
-    font-size: 1rem;
-    font-weight: bold;
-}
-.slogan {
-    font-family: "Open Sans Light";
-    font-size: 1.5rem;
-    font-weight: 600;
-    text-align: center;
-    letter-spacing: 2px;
-    color: #c2c9c8;
-    text-shadow: 1px 1px 2px rgba(219, 231, 222, 0.6);
-    transition: color 0.3s ease;
-    padding-top: 50px; /* Separación entre el carrusel y el eslogan */
-}
-
-.slogan:hover {
-    color: rgba(226, 234, 221, 0.1);
-}
 </style>

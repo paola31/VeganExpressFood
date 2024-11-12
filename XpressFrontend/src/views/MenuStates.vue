@@ -1,152 +1,122 @@
 <script>
+
+import CrudTable from "@/components/CrudTable.vue";
+import EditItem from "@/components/EditItem.vue";
+import Notifier from "@/components/Notifier.vue";
+
 export default {
     name: "MenuStates",
+
     data() {
         return {
-            States: [], // Usamos esta propiedad para almacenar los estados
-            newStateName: '', // Variable para capturar el nuevo estado
-            errorMessage: '',
-            successMessage: ''
+            message: '',
+            tableProps: {
+                columns: ['Id', 'Nombre', 'Acciones'],
+                data: this.states,
+                slogan: "Estados del Menú"
+            },
+            addFormProps: {
+                title: "",
+                placeholder: "Agregar estado del menu",
+                buttonText: "Guardar",
+                item: {}
+            },
+            notifierProps: {
+                errorClasses: "alert alert-danger",
+                successClasses: "alert alert-success",
+                message: "",
+                isError: false
+            },
+            isEditing: false,
         };
     },
+
     methods: {
-        // Método para cargar los estados
         async getMenuStates() {
             try {
-                const response = await this.$apiClient.post('/getMenuStates');
-                this.States = response.data.states;
+                const response = await this.$apiClient.getMenuStates();
+                this.tableProps.data = response.data.states;
             } catch (error) {
-                this.errorMessage = error.response ? error.response.data.message : 'Error al consultar estados de la orden';
-            }
+                this.showNotification(error.response ? error.response.data.message : 'Error al consultar estados de la orden', true);            }
         },
 
-        // Método para agregar un nuevo estado
-        async addState() {
-            if (!this.newStateName) {
-                this.errorMessage = 'El nombre del estado no puede estar vacío';
-                return;
-            }
+        async addState(name) {
             try {
-                await this.$apiClient.post('/addState', { name: this.newStateName });
-                this.successMessage = 'Estado agregado con éxito';
-                this.newStateName = '';
+                await this.$apiClient.addMenuState(name);
                 await this.getMenuStates();
+                this.showNotification("Estado agregado con éxito", false);
             } catch (error) {
-                this.errorMessage = error.response ? error.response.data.message : 'Error al agregar el estado';
+                this.showNotification(error.response ? error.response.data.message : 'Error al agregar el estado', true);
             }
         },
 
-        // Método para eliminar un estado
         async deleteState(stateId) {
             try {
-                await this.$apiClient.post('/deleteState', { id: stateId });
-                this.successMessage = 'Estado eliminado con éxito';
+                await this.$apiClient.deleteMenuState(stateId);
+                this.showNotification("Estado eliminado con éxito", false);
                 await this.getMenuStates();
             } catch (error) {
-                this.errorMessage = error.response ? error.response.data.message : 'Error al eliminar el estado';
+                this.showNotification(error.response ? error.response.data.message : 'Error al agregar el estado', true);
             }
         },
 
-        // Método para actualizar el estado
-        async updateState(stateId, newName) {
-            if (!newName) {
-                this.errorMessage = 'El nombre del estado no puede estar vacío';
-                return;
-            }
+        async updateState(item) {
             try {
-                await this.$apiClient.post('/updateState', { id: stateId, name: newName });
-                this.successMessage = 'Estado actualizado con éxito';
+                await this.$apiClient.updateMenuState(item);
                 await this.getMenuStates();
+                this.showNotification("Estado actualizado con éxito", false);
             } catch (error) {
-                this.errorMessage = error.response ? error.response.data.message : 'Error al actualizar el estado';
+                this.showNotification(error.response ? error.response.data.message : 'Error al agregar el estado', true);
             }
+        },
+
+        loadAddForm(item) {
+            this.isEditing = true;
+            this.addFormProps.item = item;
+            this.addFormProps.title = item !== undefined ? "Editar estado" : "Agregar estado";
+        },
+
+        save(item) {
+            if(item.id !== "") {
+                this.updateState(item);
+            } else {
+                this.addState(item.name);
+            }
+
+           this.isEditing = false;
+        },
+
+        showNotification(message, isError) {
+            this.notifierProps.message = message;
+            this.notifierProps.isError = isError;
+            setTimeout(() => {
+                this.notifierProps.message = '';
+            }, 3000);
+        },
+
+        cancel() {
+            this.isEditing = false;
         }
     },
+
     beforeMount() {
         this.getMenuStates();
-    }
+    },
+
+    components: { Notifier, EditItem, CrudTable},
 };
 </script>
 
 <template>
-    <div class="custom-container">
-        <!-- Mensajes de error y éxito -->
-        <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-        <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div class="container">
+        <Notifier :notifyData=this.notifierProps />
 
-        <h2 class="slogan">Estados del Menú</h2>
+        <CrudTable v-if="!this.isEditing" :tableProps=this.tableProps @delete="this.deleteState" @add="loadAddForm" @edit="loadAddForm"/>
 
-        <!-- Campo para agregar un nuevo estado -->
-        <div class="mb-3">
-            <input  v-model="newStateName" placeholder="Nombre del nuevo estado" class="form-control d-inline w-50 mr-2" />
-            <button @click="addState" class="btn btn1 btn-add">Agregar Estado</button>
-        </div>
-
-        <!-- Tabla de estados -->
-        <table class="table table-striped table-dark">
-            <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Acciones</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="state in States" :key="state.id">
-                <td scope="row">{{ state.id }}</td>
-                <td>{{ state.name }}</td>
-                <td>
-                    <!-- Botón para modificar el estado -->
-                    <button
-                        @click="$router.push({ name: 'modifyState', params: { id: state.id } })"
-                        class="btn btn-warning btn-sm"> Modificar </button>                    <!-- Botón para eliminar el estado -->
-                    <button @click="deleteState(state.id)" class="btn btn-danger btn-sm">Eliminar</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <EditItem v-if="this.isEditing" :form=this.addFormProps @save="this.save" @cancel="this.cancel"></EditItem>
     </div>
 </template>
 
 <style scoped>
-.custom-container {
-    max-width: 600px;
-    margin: 100px auto 0;
-}
 
-button.btn {
-    margin-right: 5px;
-    background: #5b6c69;
-    margin-left: 20px;
-    border: 3px solid #2d3835; /* Aplica borde completo */
-    border-radius: 8px;
-}
-
-/* Estilos específicos para el botón "Agregar Estado" */
-button.btn-add {
-    background-color: #99b291; /* Cambia el fondo a un color verde */
-    color: #2d3835;             /* Cambia el color del texto */
-    border-color: #2d3835;
-    margin-sta: 50px;/* Cambia el borde */
-}
-
-.slogan {
-    font-family: "Open Sans Light";
-    font-size: 1.5rem;
-    font-weight: 600;
-    text-align: center;
-    letter-spacing: 2px;
-    color: #c2c9c8;
-    margin-bottom: 50px;
-    text-shadow: 1px 1px 2px rgba(219, 231, 222, 0.6);
-    transition: color 0.3s ease;
-    padding-top: 50px; /* Separación entre el carrusel y el eslogan */
-}
-
-.slogan:hover {
-    color: rgba(226, 234, 221, 0.1);
-}
-.alert {
-    text-align: center;
-}
 </style>

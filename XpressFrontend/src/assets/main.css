@@ -15,6 +15,83 @@ a,
   padding: 3px;
 }
 
+.btn-add {
+  background-color: #99b291;
+  color: #2d3835;
+  border-color: #2d3835;
+  margin-sta: 50px;
+}
+
+.container form {
+  background-color: #212529;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 8px rgb(45, 56, 53);
+  width: 150%;
+  max-width: 400px;
+}
+
+.container form label {
+  font-size: 1.1rem;
+  color: #e0e0e0;
+  text-align: left;
+}
+
+.container form .custom-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #00796b;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  color: #212529;
+  transition: border-color 0.3s;
+}
+
+.container form .custom-input:focus {
+  border-color: #a8afad;
+  outline: none;
+}
+
+.container form .custom-button {
+  padding: 12px 20px;
+  width: 100%;
+  font-size: 1.1rem;
+  color: white;
+  background-color: #00796b;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.container form .custom-button:hover {
+  background-color: #5b6c69;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  font-family: "Muli", sans-serif;
+  letter-spacing: 2px;
+}
+
+.slogan {
+  font-family: "Muli", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 2px;
+  color: #c2c9c8;
+  text-shadow: 1px 1px 2px rgba(219, 231, 222, 0.6);
+  transition: color 0.3s ease;
+}
+
+.slogan:hover {
+  color: rgba(226, 234, 221, 0.1);
+}
+
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);

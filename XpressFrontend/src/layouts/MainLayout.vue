@@ -1,29 +1,56 @@
-<script setup>
-import {RouterLink, RouterView} from 'vue-router'
-import HelloWorld from '@/components/HelloWorld.vue'
+<script>
+
+import Navbar from "@/components/Navbar.vue";
+import Particles from "@/components/Particles.vue";
+import brocoli from "@/assets/brocoli.png";
+import mushrom from "@/assets/mushrom.png";
+import mazorca from "@/assets/mazorca.png";
+
+export default {
+    name: 'MainLayout',
+
+    data() {
+        return {
+            navLinks: [
+                {
+                    to: "/",
+                    title: "Inicio",
+                },
+                {
+                    to: "/login",
+                    title: "Iniciar Sesión",
+                },
+                {
+                    to: "/register",
+                    title: "Registarse",
+                },
+                {
+                    to: "/adminlogin",
+                    title: "Administradores",
+                }
+            ],
+            particles: [brocoli, mushrom, mazorca],
+        }
+    },
+
+    components: {
+        Navbar, Particles,
+    }
+}
 </script>
 
-<template>
-    <header>
+<<template>
+    <div class="container-fluid p-0 navbar-container">
+        <Particles
+            :particleCount="80"
+            particleSize="25"
+            :imageUrls="this.particles"
+            hoverEffectDistance="150"
+        />
+        <Navbar :navLinks="this.navLinks" />
 
-        <video class="logo" width="350" height="350" autoplay loop muted>
-            <source src="@/assets/logo.mp4" type="video/mp4">
-        </video>
-
-        <div class="wrapper">
-            <HelloWorld msg=" "/>
-
-            <nav>
-                <RouterLink to="/">Inicio</RouterLink>
-                <RouterLink to="/login">Iniciar sesión</RouterLink>
-                <RouterLink to="/register">Registrarse</RouterLink>
-                <RouterLink to="/adminlogin">Administradores</RouterLink>
-            </nav>
-        </div>
-    </header>
-
-    <RouterView/>
-
+        <RouterView/>
+    </div>
 </template>
 
 <style scoped>

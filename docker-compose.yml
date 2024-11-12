@@ -28,7 +28,7 @@ services:
     environment:
       DB_HOST: mysql
       DB_USER: root
-      DB_PASSWORD: asdPaola50
+      DB_PASSWORD: asdPaola50 
       DB_NAME: restaurante
     restart: always
 

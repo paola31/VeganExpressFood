@@ -1,6 +1,8 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
+const multer = require('multer');
+const path = require('path');
 
 const app = express();
 const port = 3000;
@@ -12,6 +14,8 @@ app.use(cors({
     origin: 'http://localhost:5173'
 }));
 
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
+
 // Configuración de la base de datos
 const dbConfig = {
     host: process.env.DB_HOST,
@@ -19,6 +23,15 @@ const dbConfig = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
 };
+
+const storage = multer.diskStorage({
+    destination: path.join(__dirname, 'public/images'),
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage });
 
 // Registro de un nuevo usuario
 app.post('/register', async (req, res) => {
@@ -58,7 +71,7 @@ app.post('/login', async (req, res) => {
 });
 
 // Editar un usuario existente
-app.put('/edit', async (req, res) => {
+app.post('/edit', async (req, res) => {
     const { name, lastname, phone, email, password } = req.body;
     try {
         const connection = await mysql.createConnection(dbConfig);
@@ -79,7 +92,7 @@ app.put('/edit', async (req, res) => {
 });
 
 // Eliminar un usuario
-app.delete('/delete', async (req, res) => {
+app.post('/delete', async (req, res) => {
     const { email } = req.body;
     try {
         const connection = await mysql.createConnection(dbConfig);
@@ -139,7 +152,6 @@ app.post('/addState', async (req, res) => {
 //Actualizar estado del menú
 app.post('/updateState', async (req, res) => {
     const { id, name } = req.body;
-    console.log(JSON.stringify(req.body));
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [result] = await connection.execute(
@@ -190,39 +202,57 @@ app.post('/getMenuStates', async (req, res) => {
     }
 })
 
-//Añadir item del menú
-app.post('/addMenu', async (req, res) => {
-    const { name, description, price } = req.body;
+//Obtener items del menu
+app.post('/getMenuItems', async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [result] = await connection.execute(
-            'INSERT INTO Menu (name, description, price) VALUES (?,?,?)',
-            [name, description, price]
+            'SELECT * FROM Menu'
         );
         connection.end();
-        res.status(201).json({ message: 'Item del menú creado exitosamente', state: result });
+        res.status(200).json({ items: result });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+})
+
+//Añadir item del menú
+app.post('/addMenuItem', upload.single('image'), async (req, res) => {
+    const { name, description, price, state } = req.body;
+    const imageFileName = req.file ? req.file.filename : null;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [result] = await connection.execute(
+            'INSERT INTO Menu (name, description, price, state, image) VALUES (?,?,?,?,?)',
+            [name, description, price, state, imageFileName]
+        );
+        connection.end();
+        res.status(201).json({ message: 'Item del menú creado exitosamente', itemId: result.insertId });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
 //Actualizar item del menú
-app.put('/updateMenu', async (req, res) => {
+app.post('/updateMenuItem', upload.single('image'), async (req, res) => {
     const { id, name, description, price, state } = req.body;
+    const imageFileName = req.file ? req.file.filename : null;
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [result] = await connection.execute(
-            'UPDATE Menu SET name = ? , description = ?, price = ?, state = ? WHERE id = ?',
-            [name, description, price, state, id]
+            'UPDATE Menu SET name = ? , description = ?, price = ?, state = ?, image = ? WHERE id = ?',
+            [name, description, price, state, imageFileName, id]
         );
         connection.end();
+        res.status(201).json({ message: 'Item del menú actualizado exitosamente', itemId: result.insertId });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
 //Eliminar item del menú
-app.delete('/deleteMenu', async (req, res) => {
+app.post('/deleteMenu', async (req, res) => {
     const { id } = req.body;
     try {
         const connection = await mysql.createConnection(dbConfig);
@@ -258,7 +288,7 @@ app.post('/addOrderState', async (req, res) => {
 });
 
 //Actualizar estado de la orden
-app.put('/updateOrderState', async (req, res) => {
+app.post('/updateOrderState', async (req, res) => {
     const { id, name } = req.body;
     try {
         const connection = await mysql.createConnection(dbConfig);
@@ -267,13 +297,14 @@ app.put('/updateOrderState', async (req, res) => {
             [name, id]
         );
         connection.end();
+        res.status(200).json({ message: 'Estado actualizado exitosamente' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
 //Eliminar estado de la orden
-app.delete('/deleteOrderState', async (req, res) => {
+app.post('/deleteOrderState', async (req, res) => {
     const { id } = req.body;
     try {
         const connection = await mysql.createConnection(dbConfig);
@@ -323,7 +354,7 @@ app.post('/registerReservation', async (req, res) => {
 });
 
 // Eliminar reserva
-app.delete('/deleteReservation', async (req, res) => {
+app.post('/deleteReservation', async (req, res) => {
     const { id } = req.body;
     try {
         const connection = await mysql.createConnection(dbConfig);

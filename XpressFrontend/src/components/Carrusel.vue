@@ -1,15 +1,18 @@
 <template>
     <div id="carouselExampleInterval" class="carousel slide small-carousel" data-bs-ride="carousel">
         <div class="carousel-inner">
-            <div class="carousel-item active" data-bs-interval="4000">
-                <img src="@/assets/mush.jpg" class="d-block w-100" alt="corn">
-            </div>
             <div class="carousel-item" data-bs-interval="4000">
                 <img src="@/assets/corn.jpg" class="d-block w-100" alt="corn">
             </div>
-            <div class="carousel-item">
+
+            <div class="carousel-item active" data-bs-interval="4000">
+                <img src="@/assets/mush.jpg" class="d-block w-100" alt="corn">
+            </div>
+
+            <div class="carousel-item" data-bs-interval="4000">
                 <img src="@/assets/poppy.jpg" class="d-block w-100" alt="corn">
             </div>
+
         </div>
     </div>
 
@@ -58,12 +61,12 @@ export default {
 
 /* Estilo para la sección de slogan */
 .slogan {
-    font-family: "Open Sans Light";
+    font-family: "multi";
     font-size: 1.2rem;
     font-weight: 600;
     text-align: center;
     letter-spacing: 2px;
-    color: #333;
+    color: #bdbdbd;
     text-shadow: 1px 1px 2px rgb(117, 136, 128);
     transition: color 0.3s ease;
     padding-top: 500px; /* Separación entre el carrusel y el eslogan */

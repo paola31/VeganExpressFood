@@ -20,16 +20,15 @@ export default {
     methods: {
         async registerUser() {
             try {
-                const response = await this.$apiClient.post('/register', this.form)
+                const response = await this.$apiClient.register(this.form)
                 this.successMessage = 'Usuario registrado exitosamente!'
                 this.errorMessage = ''
 
-                this.form = {
-                    name: '',
-                    lastname: '',
-                    phone: '',
-                    email: '',
-                    password: ''
+                if(response.status === 201){
+                    this.errorMessage = ''
+                    this.$router.push('/user/dashboard')
+                } else {
+                    console.log(response)
                 }
             } catch (error) {
                 this.errorMessage = error.response ? error.response.data.message : 'Error al registrar el usuario'
@@ -37,31 +36,30 @@ export default {
             }
         }
     }
-
 }
 </script>
 
 <template>
-    <div class="container">
+    <div class="container d-flex flex-column align-items-center justify-content-center vh-100">
         <span class="title slogan">Registrate</span>
-        <form @submit.prevent="adminLogin">
+        <form @submit.prevent="registerUser">
             <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
             <div class="mb-3">
-                <label for="email" class="form-label">Nombre</label>
-                <input type="email" class="custom-input" id="nombre" v-model="form.email" placeholder="Ingresa tu nombre">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" class="custom-input" id="nombre" v-model="form.name" placeholder="Ingresa tu nombre">
             </div>
             <div class="mb-3">
-                <label for="email" class="form-label">Apellido</label>
-                <input type="email" class="custom-input" id="apellido" v-model="form.email" placeholder="Ingresa tu apellido">
+                <label for="lastname" class="form-label">Apellido</label>
+                <input type="text" class="custom-input" id="lastname" v-model="form.lastname" placeholder="Ingresa tu apellido">
             </div>
             <div class="mb-3">
-                <label for="email" class="form-label">Teléfono</label>
-                <input type="email" class="custom-input" id="nombre" v-model="form.email" placeholder="Ingresa tu número de teléfono">
+                <label for="phone" class="form-label">Teléfono</label>
+                <input type="text" class="custom-input" id="phone" v-model="form.phone" placeholder="Ingresa tu número de teléfono">
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="custom-input" id="email" v-model="form.email" placeholder="Ingresa tu correo electrónico">
+                <input type="text" class="custom-input" id="email" v-model="form.email" placeholder="Ingresa tu correo electrónico">
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Contraseña</label>
@@ -76,96 +74,4 @@ export default {
 
 <style scoped>
 
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    min-height: 100vh;
-    color: #a6a6a6;
-    text-align: center;
-    padding: 20px;
-    margin-top: -180px;
-}
-
-.title {
-    font-size: 1.6rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    font-family: "Open Sans Light";
-    letter-spacing: 2px;
-}
-
-.container form {
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 10px 18px rgb(45, 56, 53);
-    width: 150%;
-    max-width: 400px;
-}
-
-.container form label {
-    font-size: 1.1rem;
-    color: #e0e0e0;
-    text-align: left;
-}
-
-.container form .custom-input {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #00796b;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    font-size: 1rem;
-    color: #333;
-    transition: border-color 0.3s;
-}
-
-.container form .custom-input:focus {
-    border-color: #004d40;
-    outline: none;
-}
-
-.container form .custom-button {
-    padding: 12px 20px;
-    width: 100%;
-    font-size: 1.1rem;
-    color: white;
-    background-color: #00796b;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.container form .custom-button:hover {
-    background-color: #004d40;
-}
-
-.alert {
-    margin-bottom: 15px;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: rgba(255, 0, 0, 0.1);
-    color: red;
-    font-size: 1rem;
-    font-weight: bold;
-}
-.slogan {
-    font-family: "Open Sans Light";
-    font-size: 1.5rem;
-    font-weight: 600;
-    text-align: center;
-    letter-spacing: 2px;
-    color: #c2c9c8;
-    text-shadow: 1px 1px 2px rgba(219, 231, 222, 0.6);
-    transition: color 0.3s ease;
-    padding-top: 100px; /* Separación entre el carrusel y el eslogan */
-}
-
-.slogan:hover {
-    color: rgba(226, 234, 221, 0.1);
-}
 </style>

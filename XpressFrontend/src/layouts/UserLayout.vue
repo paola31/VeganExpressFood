@@ -1,22 +1,44 @@
-
 <script>
+
+import Navbar from "@/components/Navbar.vue";
+
 export default {
-    name: "UserLayout"
+    name: "UserLayout",
+
+    data() {
+        return {
+            navLinks: [
+                {
+                    to: "/user/orders",
+                    title: "Pide aquí",
+                },
+                {
+                    to: "/user/reservations",
+                    title: "Haz tu reserva",
+                },
+                {
+                    to: "/",
+                    title: "Salir",
+                }
+            ]
+        }
+    },
+
+    components: {
+        Navbar,
+    }
+
 }
 </script>
+
 <template>
-    <div>
-        <header>
-            <nav>
-                <RouterLink to="/user/dashboard">Dashboard de Usuario</RouterLink>
-                <RouterLink to="/user/profile">Perfil</RouterLink>
-            </nav>
-        </header>
-        <RouterView />
+    <div class="container-fluid p-0 navbar-container">
+        <Navbar :navLinks="this.navLinks" />
+
+        <RouterView/>
     </div>
 </template>
 
-
 <style scoped>
-/* Estilos específicos para el layout de usuario */
+
 </style>
